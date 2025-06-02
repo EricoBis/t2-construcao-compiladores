@@ -55,6 +55,10 @@ public class TS_entry
        return tipoBase; 
    }
 
+   public ClasseID Classe(){
+    return classe;
+   }
+
    public String toString() {
     StringBuilder aux = new StringBuilder();//("ident\t\tClasse\t\tEscopo\t\tTipo\n");
      
@@ -137,6 +141,21 @@ public class TS_entry
       else if (tipo==Parser.Tp_ARRAY)  return "array";
       else if (tipo.classe==ClasseID.NomeStruct)  return  tipo.getId();
       else if (tipo==Parser.Tp_ERRO)  return  "_erro_";
+      else if (tipo==Parser.Tp_VOID) return "void";
+	    else                             return "erro/tp:";
+   }
+
+   public String getTipoString() {
+      if (tipo == null)  return "null"; 
+     	else if (tipo==Parser.Tp_INT)    return "int"; 
+      else if (tipo==Parser.Tp_BOOL)   return "boolean"; 
+      else if (tipo==Parser.Tp_FLOAT)  return "float";
+      else if (tipo==Parser.Tp_STRING) return "string";
+      else if (tipo==Parser.Tp_STRUCT) return "struct";
+      else if (tipo==Parser.Tp_ARRAY)  return "array";
+      else if (tipo.classe==ClasseID.NomeStruct)  return  tipo.getId();
+      else if (tipo==Parser.Tp_ERRO)  return  "_erro_";
+      else if (tipo==Parser.Tp_VOID) return "void";
 	    else                             return "erro/tp:";
    }
 
