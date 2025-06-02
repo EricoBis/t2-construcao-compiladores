@@ -31,7 +31,16 @@ public class TabSimb
           System.out.println(nodo);
       }
     }
+
+    public TS_entry pesquisa(String umId, TS_entry escopo) {
+      if (escopo != null) {
+          TS_entry local = escopo.getLocalTS().pesquisa(umId);
+          if (local != null) return local;
+      }
       
+      return pesquisa(umId);
+  }
+
     public TS_entry pesquisa(String umId) {
       for (TS_entry nodo : lista) {
           if (nodo.getId().equals(umId)) {
