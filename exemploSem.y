@@ -7,7 +7,7 @@
 
 %token IDENT, INT, FLOAT, BOOL, NUM, STRING
 %token LITERAL, AND, VOID, MAIN, IF, RETURN
-%token STRUCT, FUNC, OR, EQUALS, DIFF, ELSE
+%token STRUCT, FUNC, OR, EQUALS, DIFF
 
 %right '='
 %nonassoc '>' '<'
@@ -32,9 +32,9 @@ dList : decl dList | ;
 decl : declStruct 
 
       | type IDENT ';' {  TS_entry nodo = ts.pesquisa($2);
-    	                if (nodo != null) 
-                            yyerror("(sem) variavel >" + $2 + "< jah declarada");
-                        else ts.insert(new TS_entry($2, (TS_entry)$1, currEscopo, currClass), currEscopo); 
+    	                    if (nodo != null) 
+                              yyerror("(sem) variavel >" + $2 + "< jah declarada");
+                          else ts.insert(new TS_entry($2, (TS_entry)$1, currEscopo, currClass), currEscopo); 
                         }
       | type '[' NUM ']' IDENT  ';' 
                     {  TS_entry nodo = ts.pesquisa($5);
@@ -45,31 +45,30 @@ decl : declStruct
       ;
               
 declStruct : STRUCT IDENT  {  TS_entry nodo = ts.pesquisa($2);
-    	                    if (nodo != null) 
+    	                        if (nodo != null) 
                                  yyerror("(sem) variavel >" + $2 + "< jah declarada");
-                            else {
-                                nodo = new TS_entry($2, Tp_STRUCT, currEscopo, ClasseID.NomeStruct);
-                                ts.insert(nodo, currEscopo);
- 								currEscopo = nodo; 
-                                currClass = ClasseID.CampoStruct; 
+                              else {
+                                 nodo = new TS_entry($2, Tp_STRUCT, currEscopo, ClasseID.NomeStruct);
+                                 ts.insert(nodo, currEscopo);
+ 															   currEscopo = nodo; 
+                                 currClass = ClasseID.CampoStruct; 
                                 }
                             }
                
                '{' dList '}'
                 { currEscopo = null; currClass = ClasseID.VarGlobal; }
                 ';'
-             ;
-
-type : INT    { $$ = Tp_INT; }
-     | FLOAT  { $$ = Tp_FLOAT; }
-     | BOOL   { $$ = Tp_BOOL; }
-	 | STRING { $$ = Tp_STRING; }
-     | IDENT  { TS_entry nodo = ts.pesquisa($1);
-    	                if (nodo == null ) 
-                           yyerror("(sem) Nome de tipo <" + $1 + "> nao declarado ");
-                        else 
-                            $$ = nodo;
-                     } 
+                ; 
+                type : INT    { $$ = Tp_INT; }
+                    | FLOAT  { $$ = Tp_FLOAT; }
+                    | BOOL   { $$ = Tp_BOOL; }
+                    | STRING { $$ = Tp_STRING; }
+                    | IDENT  { TS_entry nodo = ts.pesquisa($1);
+                                        if (nodo == null ) 
+                                        yyerror("(sem) Nome de tipo <" + $1 + "> nao declarado ");
+                                        else 
+                                            $$ = nodo;
+                                } 
      ;
 
 mList : metodo mList | ;
@@ -79,17 +78,16 @@ metodo: FUNC typeFunc IDENT {
           if (existing != null) {
               yyerror("Função '" + $3 + "' já declarada");
           } else {
-              existing = new TS_entry($3, (TS_entry)$2, currEscopo, ClasseID.NomeFuncao);
-              ts.insert(existing, currEscopo);
-              currEscopo = existing;
+              TS_entry funcEntry = new TS_entry($3, (TS_entry)$2, currEscopo, ClasseID.NomeFuncao);
+              ts.insert(funcEntry, currEscopo);
+              currEscopo = funcEntry;
               currClass = ClasseID.NomeParam;
           }
         }
         '(' parametros ')' {
-            currEscopo = currEscopo;
             currClass = ClasseID.VarLocal;
         }
-        bloco {
+        bloco{
             currEscopo = null;
             currClass = ClasseID.VarGlobal;
         };
@@ -117,22 +115,17 @@ listacmd : listacmd cmd
 
 cmd : exp ';' 
     | IF '(' exp ')' {
-          if (((TS_entry)$3).getTipo() != Tp_BOOL.getTipo()) {
+          if (((TS_entry)$3).getTipoStr() != Tp_BOOL.getTipoStr()) {
               yyerror("Condição do IF deve ser booleana");
           }
       }
       cmd
     | type IDENT ';' {
-          TS_entry existing = ts.pesquisa($2);
+          TS_entry existing = ts.pesquisa($2, currEscopo);
           if (existing != null) {
-              yyerror("Variável " + $2 + "' já declarada");
+              yyerror("Variável local '" + $2 + "' já declarada");
           } else {
-            existing = ts.pesquisa($2);
-            if(existing != null){
-                yyerror("Variável local '" + $2 + "' já declarada");
-            }else{
               ts.insert(new TS_entry($2, (TS_entry)$1, currEscopo, currClass), currEscopo);
-            }
           }
       }
     | type IDENT '=' exp ';' {
@@ -147,12 +140,12 @@ cmd : exp ';'
       }
     | RETURN exp ';' {
           if (((TS_entry)currEscopo).getTipo() == Tp_FLOAT) {
-                        if (((TS_entry)$2)!= Tp_INT && ((TS_entry)$2) != Tp_FLOAT) {
+                             if (((TS_entry)$2)!= Tp_INT && ((TS_entry)$2) != Tp_FLOAT) {
                               yyerror("o retorno do tipo " + ((TS_entry)$2).getTipoStr() + " é inválido para uma funcao " + ((TS_entry)currEscopo).getTipoString());
-                        }
-                        } else if (((TS_entry)currEscopo).getTipo() != ((TS_entry)$2)) {
+                             }
+                          } else if (((TS_entry)currEscopo).getTipo() != ((TS_entry)$2)) {
                               yyerror("o retorno do tipo " + ((TS_entry)$2).getTipoStr() + " é inválido para uma funcao " + ((TS_entry)currEscopo).getTipoString());
-                        }
+                          }
       };
 
 callFunc: IDENT {
@@ -160,9 +153,10 @@ callFunc: IDENT {
           if (existing == null) {
               yyerror("Função '" + $1 + "' não declarada");
           } else {
-            funcEntry = existing;
-            expectedParams = funcEntry.getLocalTS().getLista().stream().filter(p -> p.Classe() == ClasseID.NomeParam).collect(Collectors.toList()).size();
-            paramCounter = 0;
+              funcEntry = existing;
+              expectedParams = funcEntry.getLocalTS().getLista().stream().filter(p -> p.Classe() == ClasseID.NomeParam).collect(Collectors.toList()).size();
+              paramCounter = 0;
+              paramTypes = new ArrayList<>();
           }
       } 
       '(' argsOuSemArgs ')' {
@@ -183,7 +177,7 @@ callFunc: IDENT {
 
 argsOuSemArgs: args | ;
 
-args : exp ',' args{
+args : exp {
           paramTypes.add((TS_entry)$1);
           paramCounter++;
       }
@@ -202,18 +196,25 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     | exp OR exp  { $$ = validaTipo(OR, (TS_entry)$1, (TS_entry)$3); }
     | exp EQUALS exp { $$ = validaTipo(EQUALS, (TS_entry)$1, (TS_entry)$3); }
     | exp DIFF exp { $$ = validaTipo(DIFF, (TS_entry)$1, (TS_entry)$3); }
-    | callFunc
     | NUM         { $$ = Tp_INT; }      
     | '(' exp ')' { $$ = $2; }
-    | LITERAL     { $$ = Tp_STRING; }      
-    | IDENT       { TS_entry nodo = ts.pesquisa($1);
-    	                 if (nodo == null) 
-	                        yyerror("(sem) var <" + $1 + "> nao declarada");                
-                      else
-			                    $$ = nodo.getTipo();
-			            }   
+    | LITERAL     { $$ = Tp_STRING; } 
+    | callFunc     
+    | IDENT       { TS_entry nodo = ts.pesquisa($1, currEscopo);
+                    if (nodo == null) {
+                        nodo = ts.pesquisa($1);
+                        if (nodo == null) {
+                            yyerror("(sem) var <" + $1 + "> nao declarada");
+                            $$ = Tp_ERRO; 
+                        } else {
+                            $$ = nodo.getTipo();
+                        }
+                    }                
+                    else
+                        $$ = nodo.getTipo();
+                  }   
     | IDENT '[' exp ']' 
-                 { TS_entry nodo = ts.pesquisa($1);
+                 { TS_entry nodo = ts.pesquisa($1, currEscopo);
     	             if (nodo == null) 
 	                     yyerror("(sem) var <" + $1 + "> nao declarada");                
                    else
@@ -232,7 +233,7 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
                          else 
                              $$ = nodo.getTipo();
                        }
-						     } 
+        } 
     ;
 
 %%
@@ -282,7 +283,6 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     lexer = new Yylex(r, this);
 
     ts = new TabSimb();
-
     ts.insert(Tp_ERRO);
     ts.insert(Tp_INT);
     ts.insert(Tp_FLOAT);
@@ -311,7 +311,7 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     else {
       System.out.println("[Quit with CTRL-D]");
       System.out.print("Programa de entrada:\n");
-	  yyparser = new Parser(new InputStreamReader(System.in));
+	    yyparser = new Parser(new InputStreamReader(System.in));
     }
 
     yyparser.yyparse();
@@ -322,8 +322,13 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
     
   }
 
+
    TS_entry validaTipo(int operador, TS_entry A, TS_entry B) {
        
+        if (A == null || B == null) {
+            return Tp_ERRO;
+        }
+
          switch ( operador ) {
               case ATRIB:
                     if ( (A == Tp_INT && B == Tp_INT)                        ||
@@ -420,7 +425,7 @@ exp : exp '+' exp { $$ = validaTipo('+', (TS_entry)$1, (TS_entry)$3); }
                   break;
 						}
             return Tp_ERRO;
-			}
+				}
 
 
 
