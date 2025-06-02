@@ -60,9 +60,8 @@ public class TS_entry
    }
 
    public String toString() {
-    StringBuilder aux = new StringBuilder();//("ident\t\tClasse\t\tEscopo\t\tTipo\n");
+    StringBuilder aux = new StringBuilder();
      
-      //aux.append("Id: ");
       aux.append(String.format("%-10s", id));
 
       aux.append("\t");
@@ -133,7 +132,7 @@ public class TS_entry
 
     public String tipo2str(TS_entry tipo) {
       if (tipo == null)  return "null"; 
-     	else if (tipo==Parser.Tp_INT)    return "int"; 
+      else if (tipo==Parser.Tp_INT)    return "int"; 
       else if (tipo==Parser.Tp_BOOL)   return "boolean"; 
       else if (tipo==Parser.Tp_FLOAT)  return "float";
       else if (tipo==Parser.Tp_STRING) return "string";
@@ -147,7 +146,7 @@ public class TS_entry
 
    public String getTipoString() {
       if (tipo == null)  return "null"; 
-     	else if (tipo==Parser.Tp_INT)    return "int"; 
+      else if (tipo==Parser.Tp_INT)    return "int"; 
       else if (tipo==Parser.Tp_BOOL)   return "boolean"; 
       else if (tipo==Parser.Tp_FLOAT)  return "float";
       else if (tipo==Parser.Tp_STRING) return "string";
@@ -162,12 +161,6 @@ public class TS_entry
    public TabSimb getLocalTS() { return locais; }
 
    public TS_entry getEscopo() { return escopo; }
-
-
-   // public void insereLocal(String id, int tp, ClasseID cl) {
-   //      locais.insert(new TS_entry(id, tp, cl));
-   //}
-
 }
 
 
