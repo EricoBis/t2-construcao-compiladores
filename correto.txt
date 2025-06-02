@@ -1,0 +1,40 @@
+int i;
+int j;
+int k;
+
+float x;
+float y;
+
+bool b;
+bool ok;
+
+void main() {
+   j = k;
+   i = 5;  
+
+   x = i + 4;
+   y = y + i + 2;  
+ 
+   b = ok;
+
+   ok = i > j;
+
+   if (ok)
+      i = 7;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
