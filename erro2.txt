@@ -1,53 +1,12 @@
-int i;
 
 float x;
+int resultado;
 
-bool b;
-
-int[10] vint;
-float [20] vfloat;
-bool[30] vbool;
-
-
-void main() {
-
-   i = 5;
-   
-   i = vint[x];
-
-   i = vint[i>2];
-    
-   i = vfloat[2] + i;
-
-   b = vbool[i+1] + 1;
-
-   b = vfloat[ vint[i] + i ] && 5;
-   
-   vint[3] = x;
-
-   vint[i] = i>2;
-    
-   vfloat[x] = x + i;
-
-   vbool[i+1] = x + i;
-
-   vbool[ vint[4] + 2 ] = vfloat[ vint[i] + i ] ;
-
-
+func int soma(int a, int b) {
+    return a + b;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+func void main() {
+    resultado = soma(3); 
+    x = resultado / 2;
+}

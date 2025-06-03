@@ -1,0 +1,19 @@
+$TRACE_ON
+int a;
+int b;
+float r;
+bool flag;
+
+func float dividir(int num, int den) {
+    float resultado = 0;
+    if (den != 0)
+        resultado = num / den;
+    return resultado;
+}
+
+func void main() {
+    a = 10;
+    b = 2;
+    r = dividir(a, b);
+    flag = a > b;
+}

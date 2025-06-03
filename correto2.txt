@@ -1,0 +1,16 @@
+$TRACE_ON
+int x;
+float y;
+bool condicao;
+
+func bool maiorQueCinco(int valor) {
+    bool result = valor > 5;
+    return result;
+}
+
+func void main() {
+    x = 7;
+    condicao = maiorQueCinco(x);
+    if (condicao)
+        y = x * 2;
+}

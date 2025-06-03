@@ -1,41 +1,16 @@
-int i;
-int j;
-int k;
 
-float x;
-float y;
+int valor;
+bool status;
 
-bool b;
-bool ok;
-
-void main() {
-   
-   j = k + x;
-  
-   x = i > 4;
-   
-    y = y + ok + 2;  
- 
-   b = 1;
-
-   ok = i + j;
-
-   if (ok > b)
-      i = 7;
+func int duplicar(int x) {
+    return x + x;
 }
 
+func void main() {
+   valor = 3;
+   int result = duplicar(valor); 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+   status = result > valor;
+   if (status)
+      duplicar(status);
+}
